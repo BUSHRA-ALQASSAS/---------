@@ -1,12 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Professional Calculator</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.3/css/bulma.min.css">
+    <link rel="stylesheet" href="../fontawesome-free-6.6.0-web/css/all.min.css">
     <link rel="stylesheet" href="s.css">
 </head>
+
 <body>
     <section class="section">
         <div class="container">
@@ -34,11 +37,22 @@
                         <button class="button is-light" onclick="appendToDisplay('+')">+</button>
                         <button class="button is-light" onclick="deleteLast()">DEL</button>
                         <button class="button is-primary" onclick="calculate()">=</button>
+                        <button class="button is-pink is-fullwidth" onclick="toggleMemory()"> 
+                            <span class="icon"> <i class="fas fa-book"></i></span>
+                             <span>Memory</span>
+                        </button>
                     </div>
                 </div>
             </div>
         </div>
     </section>
+    <aside class="memory" id="memory-sidebar">
+        <div class="box">
+            <h2 class="title is-4">Memory</h2>
+            <ul id="memory-list"></ul>
+        </div>
+    </aside>
     <script src="s.js"></script>
 </body>
+
 </html>

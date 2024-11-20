@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Professional Calculator</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.3/css/bulma.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/all.min.js"></script>
+    <style>
+        body {
+    background-color: #f5f5f5;
+    background: linear-gradient(to right, #ffcccc, #ffb3d9, #dab3ff, #b3ccff);
+}
+
+.calculator {
+    max-width: 400px;
+    margin: 0 auto;
+    padding-top: 50px;
+}
+
+.input {
+    font-size: 2em;
+    text-align: right;
+}
+
+.buttons .button {
+    font-size: 1.5em;
+    margin: 5px 5px 0 0;
+    border-radius: 50%;
+    position: relative;
+    width: 25%;
+    height: 80px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.buttons .button:hover {
+    transform: scale(1.05);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.buttons .button.is-fullwidth {
+    width: calc(100% - 10px);
+}
+
+.heart-button::before {
+    content: '';
+    display: block;
+    width: 50%;
+    height: 50%;
+    border-radius: 50% 50% 0 0;
+    position: absolute;
+    top: -25%;
+    left: 25%;
+    background-color: inherit;
+    transform: rotate(-45deg);
+    transform-origin: 0 100%;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+.heart-button::after {
+    content: '';
+    display: block;
+    width: 50%;
+    height: 50%;
+    border-radius: 50% 50% 0 0;
+    position: absolute;
+    top: -25%;
+    left: 25%;
+    background-color: inherit;
+    transform: rotate(45deg);
+    transform-origin: 100% 100%;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+.memory {
+    position: fixed;
+    top: 0;
+    right: -250px;
+    width: 250px;
+    height: 100%;
+    background-color: white;
+    box-shadow: -2px 0 5px rgba(0,0,0,0.1);
+    transition: right 0.3s;
+    padding: 20px;
+    overflow-y: auto;
+}
+
+.memory.active {
+    right: 0;
+}
+
+.button.is-pink {
+    background-color: #ff69b4;
+    border-color: transparent;
+    color: white;
+}
+
+.button.is-pink:hover {
+    background-color: #ff85c0;
+    border-color: transparent;
+    color: white;
+}
+
+.icon {
+    margin-right: 5px;
+}
+
+    </style>
+</head>
+<body>
+    <section class="section">
+        <div class="container">
+            <div class="calculator">
+                <div class="box">
+                    <div class="field">
+                        <input class="input is-large" id="result" type="text" placeholder="0" readonly>
+                    </div>
+                    <div class="buttons">
+                        <button class="button is-light heart-button" onclick="clearDisplay()">C</button>
+                        <button class="button is-light heart-button" onclick="appendToDisplay('/')">/</button>
+                        <button class="button is-light heart-button" onclick="appendToDisplay('*')">*</button>
+                        <button class="button is-light heart-button" onclick="deleteLast()">DEL</button>
+                        <button class="button heart-button" onclick="appendToDisplay('7')">7</button>
+                        <button class="button heart-button" onclick="appendToDisplay('8')">8</button>
+                        <button class="button heart-button" onclick="appendToDisplay('9')">9</button>
+                        <button class="button is-light heart-button" onclick="appendToDisplay('-')">-</button>
+                        <button class="button heart-button" onclick="appendToDisplay('4')">4</button>
+                        <button class="button heart-button" onclick="appendToDisplay('5')">5</button>
+                        <button class="button heart-button" onclick="appendToDisplay('6')">6</button>
+                        <button class="button is-light heart-button" onclick="appendToDisplay('+')">+</button>
+                        <button class="button heart-button" onclick="appendToDisplay('1')">1</button>
+                        <button class="button heart-button" onclick="appendToDisplay('2')">2</button>
+                        <button class="button heart-button" onclick="appendToDisplay('3')">3</button>
+                        <button class="button is-primary heart-button" onclick="calculate()">=</button>
+                        <button class="button is-fullwidth heart-button" onclick="appendToDisplay('0')">0</button>
+                        <button class="button is-light is-fullwidth heart-button" onclick="appendToDisplay('.')">.</button>
+                        <button class="button is-pink is-fullwidth heart-button" onclick="toggleMemory()">
+                            <span class="icon">
+                                <i class="fas fa-book"></i>
+                            </span>
+                            <span>Memory</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <aside class="memory" id="memory-sidebar">
+        <div class="box">
+            <h2 class="title is-4">Memory</h2>
+            <ul id="memory-list"></ul>
+        </div>
+    </aside>
+    <script >
+let memory = [];
+
+function clearDisplay() {
+    document.getElementById('result').value = '';
+}
+
+function appendToDisplay(value) {
+    document.getElementById('result').value += value;
+}
+
+function deleteLast() {
+    let display = document.getElementById('result').value;
+    document.getElementById('result').value = display.substring(0, display.length - 1);
+}
+
+function calculate() {
+    let display = document.getElementById('result').value;
+    try {
+        let result = eval(display);
+        document.getElementById('result').value = result;
+        memory.push(`${display} = ${result}`);
+        updateMemoryList();
+    } catch (e) {
+        document.getElementById('result').value = 'Error';
+    }
+}
+
+function toggleMemory() {
+    let sidebar = document.getElementById('memory-sidebar');
+    sidebar.classList.toggle('active');
+}
+
+function updateMemoryList() {
+    let memoryList = document.getElementById('memory-list');
+    memoryList.innerHTML = '';
+    for (let entry of memory) {
+        let li = document.createElement('li');
+        li.textContent = entry;
+        memoryList.appendChild(li);
+    }
+}
+
+    </script>
+</body>
+</html>
+

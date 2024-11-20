@@ -1,3 +1,4 @@
+let memory = [];
 function clearDisplay() {
     document.getElementById('result').value = '';
 }
@@ -14,8 +15,33 @@ function deleteLast() {
 function calculate() {
     let display = document.getElementById('result').value;
     try {
-        document.getElementById('result').value = eval(display);
+        let result = eval(display);
+        document.getElementById('result').value = result;
+        memory.push(`${display} = ${result}`);
+        updateMemoryList();
     } catch (e) {
         document.getElementById('result').value = 'Error';
     }
 }
+function toggleMemory() {
+    let sidebar = document.getElementById('memory-sidebar');
+    sidebar.classList.toggle('active');
+}
+
+function updateMemoryList() {
+    let memoryList = document.getElementById('memory-list');
+    memoryList.innerHTML = '';
+    for (let entry of memory) {
+        let li = document.createElement('li');
+        li.textContent = entry;
+        memoryList.appendChild(li);
+    }
+}
+/*عرفنا مصفوفة memory لتخزين العمليات.
+
+دالة calculate الآن تضيف العمليات إلى الذاكرة عند حساب النتيجة.
+
+دالة toggleMemory لتفعيل أو إخفاء الشريط الجانبي.
+
+دالة updateMemoryList لتحديث قائمة العمليات المخزنة في الشريط الجانبي.
+*/
